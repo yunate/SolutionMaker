@@ -1,0 +1,125 @@
+#include "FileAndDirUtil.h"
+
+#include <Windows.h>
+#include <tchar.h>
+
+bool Util::IsDir(const std::wstring & path)
+{
+    DWORD ftyp = ::GetFileAttributes(path.c_str());
+
+    if (ftyp & FILE_ATTRIBUTE_DIRECTORY)
+    {
+        // 这是一个文件夹
+        return true;
+    }
+
+    return false;
+}
+
+bool Util::IsFileExist(const std::wstring& filePath)
+{
+    DWORD dwAttrib = ::GetFileAttributes(filePath.c_str());
+    return (INVALID_FILE_ATTRIBUTES != dwAttrib) && (0 == (dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
+}
+
+bool Util::IsDirExist(const std::wstring& dirPath)
+{
+    DWORD dwAttrib = ::GetFileAttributes(dirPath.c_str());
+    return (INVALID_FILE_ATTRIBUTES != dwAttrib) && (0 != (dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
+}
+
+bool Util::IsPathExist(const std::wstring& path)
+{
+    DWORD dwAttrib = ::GetFileAttributes(path.c_str());
+    return INVALID_FILE_ATTRIBUTES != dwAttrib;
+}
+
+bool Util::DeleteFile_(const std::wstring& dfilePath)
+{
+    return (::DeleteFile(dfilePath.c_str()) == TRUE);
+}
+
+bool Util::DeleteDir(const std::wstring & dirPath)
+{
+    if (!IsDirExist(dirPath))
+    {
+        return false;
+    }
+
+    HANDLE hFile = NULL;
+    WIN32_FIND_DATA fileInfo;
+    ::memset(&fileInfo, 0, sizeof(LPWIN32_FIND_DATA));
+
+    std::wstring wsTemp(dirPath);
+
+    if (_T("\\") != wsTemp.substr(wsTemp.length() - 2))
+    {
+        wsTemp.append(_T("\\"));
+    }
+
+    wsTemp.append(_T("*"));
+    hFile = ::FindFirstFile(wsTemp.c_str(), &fileInfo);
+
+    if (INVALID_HANDLE_VALUE == hFile)
+    {
+        return false;
+    }
+
+    do
+    {
+        //如果是当前目录或者是上级目录，就直接进入下一次循环  
+        if ('.' == fileInfo.cFileName[0])
+        {
+            continue;
+        }
+
+        if (IsDir(fileInfo.cFileName))
+        {
+            if (!DeleteDir(fileInfo.cFileName))
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if (!DeleteFile_(fileInfo.cFileName))
+            {
+                return false;
+            }
+        }
+
+    } while (::FindNextFile(hFile, &fileInfo));
+
+    FindClose(hFile);
+    return true;
+}
+
+bool Util::CreateDir(const std::wstring& dirPath)
+{
+    return ::CreateDirectory(dirPath.c_str(), NULL) == TRUE;
+}
+
+bool Util::CreateFile_(const std::wstring& filePath)
+{
+    DWORD dwDesiredAccess = GENERIC_READ | GENERIC_WRITE;
+    DWORD dwShareMode = 0;
+    LPSECURITY_ATTRIBUTES lpSecurityAttributes = 0;
+    DWORD dwCreationDisposition = CREATE_NEW;
+    DWORD dwFlagsAndAttributes = FILE_ATTRIBUTE_NORMAL;
+    HANDLE hTemplateFile = 0;
+    HANDLE handle = CreateFile(filePath.c_str(),
+                               dwDesiredAccess,
+                               dwShareMode,
+                               lpSecurityAttributes,
+                               dwCreationDisposition,
+                               dwFlagsAndAttributes,
+                               hTemplateFile);
+
+    if (handle == INVALID_HANDLE_VALUE)
+    {
+        return false;
+    }
+
+    ::CloseHandle(handle);
+    return true;
+}
