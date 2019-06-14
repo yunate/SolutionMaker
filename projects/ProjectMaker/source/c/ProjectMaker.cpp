@@ -3,8 +3,6 @@
 #include "GUID/GUID.h"
 #include "codecvt/CodeCvt.h"
 
-#include <map>
-
 template<typename T, unsigned int N>
 char(&array_size_fake_func(T(&)[N]))[N];
 #define ARRAYSIZE(A) sizeof(array_size_fake_func(A))
@@ -82,7 +80,7 @@ bool ProjectMaker::MakeDir()
 
     for (int i = 0; i < ARRAYSIZE(subDirName); ++i)
     {
-        if (!Util::CreateDir(m_projectDir + subDirName[i]) + _T("\\"))
+        if (!Util::CreateDir(m_projectDir + subDirName[i] + _T("\\")))
         {
             return false;
         }
@@ -93,13 +91,35 @@ bool ProjectMaker::MakeDir()
 
     for (int i = 0; i < ARRAYSIZE(subSourceDirName); ++i)
     {
-        if (!Util::CreateDir(m_projectDir + subSourceDirName[i]) + _T("\\"))
+        if (!Util::CreateDir(SourceDir + subSourceDirName[i] + _T("\\")))
         {
             return false;
         }
     }
 
     return true;
+}
+
+std::wstring& replace_str(std::wstring& str, const std::wstring& to_replaced, const std::wstring& newchars)
+{
+    std::wstring::size_type pos(0);
+
+    for ( ; ; )
+    {
+        pos = str.find(to_replaced, pos);
+
+        if (pos != std::wstring::npos)
+        {
+            str.replace(pos, to_replaced.length(), newchars);
+            pos += newchars.length();
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    return str;
 }
 
 bool ProjectMaker::MakeFile()
@@ -323,18 +343,25 @@ bool ProjectMaker::MakeFile()
     std::wstring projectNameStr = m_projectProperty.m_projectName;
     std::wstring GUIDStr = _T("");
     codecvt::UTF8ToUTF16(Util::GenerateGuid(), GUIDStr);
-
-    std::map<std::wstring, std::wstring> replaceMap;
-    replaceMap[_T("CONFIGURATION_TYPE")] = configurationStr;
-    replaceMap[_T("CHARACTER_SET")] = characterSetStr;
-    replaceMap[_T("RUNTIME_LIBRARY_TYPE_DEBUG")] = runtimeLibraryDbgStr;
-    replaceMap[_T("RUNTIME_LIBRARY_TYPE_RELEASE")] = runtimeLibraryStr;
-    replaceMap[_T("PROJECTNAME")] = projectNameStr;
-    replaceMap[_T("PROJECT_GUID")] = GUIDStr;
+    replace_str(templateStr, _T("CONFIGURATION_TYPE"), configurationStr);
+    replace_str(templateStr, _T("CHARACTER_SET"), characterSetStr);
+    replace_str(templateStr, _T("RUNTIME_LIBRARY_TYPE_DEBUG"), runtimeLibraryDbgStr);
+    replace_str(templateStr, _T("RUNTIME_LIBRARY_TYPE_RELEASE"), runtimeLibraryStr);
+    replace_str(templateStr, _T("PROJECTNAME"), projectNameStr);
+    replace_str(templateStr, _T("PROJECT_GUID"), GUIDStr);
     return true;
 }
 
+#include <Windows.h>
 int main()
 {
+    ProjectProperty pro;
+    pro.m_characterSet = UNICODE_TYPE;
+    pro.m_configurationType = EXE;
+    pro.m_projectName = L"test";
+    pro.m_runtimeLibraryType = STATIC;
+    ProjectMaker maker(pro, L"C:\\Users\\yudh\\Desktop\\test", true);
+    maker.MakeProject();
+    ::system("pause");
     return 1;
 }

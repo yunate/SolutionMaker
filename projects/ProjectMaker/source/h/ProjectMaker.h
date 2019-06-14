@@ -79,6 +79,7 @@ typedef struct ProjectProperty
 class ProjectMaker
 {
 public:
+    ProjectMaker() = delete;
     ProjectMaker(const ProjectProperty& m_projectProperty, const std::wstring rootDir, bool bRemoveDirIfExit);
     ~ProjectMaker();
 

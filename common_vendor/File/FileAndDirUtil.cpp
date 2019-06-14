@@ -51,12 +51,12 @@ bool Util::DeleteDir(const std::wstring & dirPath)
     ::memset(&fileInfo, 0, sizeof(LPWIN32_FIND_DATA));
 
     std::wstring wsTemp(dirPath);
-
-    if (_T("\\") != wsTemp.substr(wsTemp.length() - 2))
+    if (_T('\\') != wsTemp[wsTemp.length() - 1] && _T('/') != wsTemp[wsTemp.length() - 1])
     {
         wsTemp.append(_T("\\"));
     }
 
+    std::wstring rootPath(wsTemp);
     wsTemp.append(_T("*"));
     hFile = ::FindFirstFile(wsTemp.c_str(), &fileInfo);
 
@@ -73,16 +73,17 @@ bool Util::DeleteDir(const std::wstring & dirPath)
             continue;
         }
 
-        if (IsDir(fileInfo.cFileName))
+        std::wstring subPath = rootPath + fileInfo.cFileName;
+        if (IsDir(subPath))
         {
-            if (!DeleteDir(fileInfo.cFileName))
+            if (!DeleteDir(subPath))
             {
                 return false;
             }
         }
         else
         {
-            if (!DeleteFile_(fileInfo.cFileName))
+            if (!DeleteFile_(subPath))
             {
                 return false;
             }
@@ -91,6 +92,7 @@ bool Util::DeleteDir(const std::wstring & dirPath)
     } while (::FindNextFile(hFile, &fileInfo));
 
     FindClose(hFile);
+    ::RemoveDirectory(rootPath.c_str());
     return true;
 }
 
