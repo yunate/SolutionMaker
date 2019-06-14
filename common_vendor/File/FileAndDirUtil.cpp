@@ -68,7 +68,8 @@ bool Util::DeleteDir(const std::wstring & dirPath)
     do
     {
         //如果是当前目录或者是上级目录，就直接进入下一次循环  
-        if ('.' == fileInfo.cFileName[0])
+        if (wcscmp(fileInfo.cFileName, _T(".")) == 0 ||
+			wcscmp(fileInfo.cFileName, _T("..")) == 0)
         {
             continue;
         }
@@ -98,6 +99,11 @@ bool Util::DeleteDir(const std::wstring & dirPath)
 
 bool Util::CreateDir(const std::wstring& dirPath)
 {
+	if (IsDirExist(dirPath))
+	{
+		return true;
+	}
+
     return ::CreateDirectory(dirPath.c_str(), NULL) == TRUE;
 }
 

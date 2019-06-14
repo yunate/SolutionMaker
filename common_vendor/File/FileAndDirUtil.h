@@ -1,4 +1,3 @@
-
 #ifndef _FILE_AND_DIR_UTIL_H__
 #define _FILE_AND_DIR_UTIL_H__
 
@@ -6,43 +5,43 @@
 
 namespace Util
 {
-    /** æ˜¯å¦æ˜¯æ–‡ä»¶å¤¹
-    @param [in] path è·¯å¾„
+    /** ÊÇ·ñÊÇÎÄ¼ş¼Ğ
+    @param [in] path Â·¾¶
     */
     bool IsDir(const std::wstring& path);
 
-    /** åˆ¤æ–­æ–‡ä»¶æ˜¯å¦å­˜åœ¨
-    @param [in] filePath æ–‡ä»¶è·¯å¾„
+    /** ÅĞ¶ÏÎÄ¼şÊÇ·ñ´æÔÚ
+    @param [in] filePath ÎÄ¼şÂ·¾¶
     */
     bool IsFileExist(const std::wstring& filePath);
 
-    /** åˆ¤æ–­æ–‡ä»¶å¤¹æ˜¯å¦å­˜åœ¨
-    @param [in] dirPath æ–‡ä»¶å¤¹è·¯å¾„
+    /** ÅĞ¶ÏÎÄ¼ş¼ĞÊÇ·ñ´æÔÚ
+    @param [in] dirPath ÎÄ¼ş¼ĞÂ·¾¶
     */
     bool IsDirExist(const std::wstring& dirPath);
 
-    /** åˆ¤æ–­æ–‡ä»¶æˆ–æ–‡ä»¶å¤¹æ˜¯å¦å­˜åœ¨
-    @param [in] path è·¯å¾„
+    /** ÅĞ¶ÏÎÄ¼ş»òÎÄ¼ş¼ĞÊÇ·ñ´æÔÚ
+    @param [in] path Â·¾¶
     */
     bool IsPathExist(const std::wstring& path);
 
-    /** åˆ é™¤æ–‡ä»¶å¤¹
-    @param [in] dfilePath æ–‡ä»¶è·¯å¾„
+    /** É¾³ıÎÄ¼ş¼Ğ
+    @param [in] dfilePath ÎÄ¼şÂ·¾¶
     */
     bool DeleteFile_(const std::wstring& dfilePath);
 
-    /** åˆ é™¤æ–‡ä»¶å¤¹
-    @param [in] dirPath æ–‡ä»¶å¤¹è·¯å¾„
+    /** É¾³ıÎÄ¼ş¼Ğ
+    @param [in] dirPath ÎÄ¼ş¼ĞÂ·¾¶
     */
     bool DeleteDir(const std::wstring& dirPath);
 
-    /** åˆ›å»ºæ–‡ä»¶å¤¹
-    @param [in] dirPath æ–‡ä»¶å¤¹è·¯å¾„
+    /** ´´½¨ÎÄ¼ş¼Ğ
+    @param [in] dirPath ÎÄ¼ş¼ĞÂ·¾¶
     */
     bool CreateDir(const std::wstring& dirPath);
 
-    /** åˆ›å»ºæ–‡ä»¶
-    @param [in] filePath æ–‡ä»¶è·¯å¾„
+    /** ´´½¨ÎÄ¼ş
+    @param [in] filePath ÎÄ¼şÂ·¾¶
     */
     bool CreateFile_(const std::wstring& filePath);
 }
