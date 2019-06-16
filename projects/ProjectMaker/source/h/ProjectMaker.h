@@ -32,6 +32,11 @@ enum RUNTIME_LIBRARY_TYPE
     DYNAMIC
 };
 
+enum PROJECTMAKER_ERROR
+{
+	ERROR_DEFAULT = 0, //默认类型
+};
+
 /** 工程属性
 */
 typedef struct ProjectProperty
@@ -90,6 +95,11 @@ public:
     bool MakeProject();
 
 private:
+	/** 日子错误
+	@param [in] error 错误类型
+	*/
+	void LogError(const PROJECTMAKER_ERROR& error);
+
     /** 创建目录前的准备处理：包括路径是否有效，文件夹存在的逻辑处理等
     @return 是否成功
     */
@@ -131,6 +141,10 @@ private:
     /** 如果文件夹m_rootDir/m_projectProperty.m_projectName 存在的话，是否移除他重新创建
     */
     bool m_bRemoveDirIfExit;
+
+	/** 失败原因
+	*/
+	PROJECTMAKER_ERROR m_LastError;
 };
 
 #endif //__POJECT_MAKER_H_

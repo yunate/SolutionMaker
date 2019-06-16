@@ -81,7 +81,9 @@ bool Util::DeleteDir(const std::wstring & dirPath)
             {
                 return false;
             }
-        }
+
+			::RemoveDirectory(rootPath.c_str());
+		}
         else
         {
             if (!DeleteFile_(subPath))
@@ -92,8 +94,7 @@ bool Util::DeleteDir(const std::wstring & dirPath)
 
     } while (::FindNextFile(hFile, &fileInfo));
 
-    FindClose(hFile);
-    ::RemoveDirectory(rootPath.c_str());
+    ::FindClose(hFile);
     return true;
 }
 

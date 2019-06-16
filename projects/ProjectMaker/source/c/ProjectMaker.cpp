@@ -3,16 +3,20 @@
 #include "GUID/GUID.h"
 #include "codecvt/CodeCvt.h"
 
+#undef ARRAYSIZE(A)
 template<typename T, unsigned int N>
 char(&array_size_fake_func(T(&)[N]))[N];
 #define ARRAYSIZE(A) sizeof(array_size_fake_func(A))
+
+#define ERROR(error) LogError(error); return false
 
 ProjectMaker::ProjectMaker(const ProjectProperty& m_projectProperty,
                            const std::wstring rootDir,
                            bool bRemoveDirIfExit) :
     m_projectProperty(m_projectProperty),
     m_rootDir(rootDir),
-    m_bRemoveDirIfExit(bRemoveDirIfExit)
+    m_bRemoveDirIfExit(bRemoveDirIfExit),
+	m_LastError(ERROR_DEFAULT)
 {
 }
 
@@ -24,37 +28,47 @@ bool ProjectMaker::MakeProject()
 {
     if (!PrepareMakeDir())
     {
-        return false;
+        ERROR(ERROR_DEFAULT);
     }
 
     if (!MakeDir())
     {
-        return false;
+        ERROR(ERROR_DEFAULT);
     }
 
     if (!MakeProjFile())
     {
-        return false;
+        ERROR(ERROR_DEFAULT);
     }
 
 	if (!MakeFiltersFile())
 	{
-		return false;
+		ERROR(ERROR_DEFAULT);
 	}
 
 	if (!MakeSrcFile())
 	{
-		return false;
+		ERROR(ERROR_DEFAULT);
 	}
 
     return true;
+}
+
+void ProjectMaker::LogError(const PROJECTMAKER_ERROR& error)
+{
+	if (m_LastError != ERROR_DEFAULT)
+	{
+		return;
+	}
+
+	m_LastError = error;
 }
 
 bool ProjectMaker::PrepareMakeDir()
 {
     if (!Util::IsDirExist(m_rootDir))
     {
-        return false;
+        ERROR(ERROR_DEFAULT);
     }
 
     m_projectDir = m_rootDir + _T("\\");
@@ -65,19 +79,19 @@ bool ProjectMaker::PrepareMakeDir()
     {
         if (!m_bRemoveDirIfExit)
         {
-            return false;
+            ERROR(ERROR_DEFAULT);
         }
 
         // É¾³ýÎÄ¼þ¼Ð
         if (!Util::DeleteDir(m_projectDir))
         {
-            return false;
+            ERROR(ERROR_DEFAULT);
         }
     }
 
     if (!Util::CreateDir(m_projectDir))
     {
-        return false;
+        ERROR(ERROR_DEFAULT);
     }
 
     return true;
@@ -92,7 +106,7 @@ bool ProjectMaker::MakeDir()
     {
         if (!Util::CreateDir(m_projectDir + subDirName[i] + _T("\\")))
         {
-            return false;
+            ERROR(ERROR_DEFAULT);
         }
     }
 
@@ -103,7 +117,7 @@ bool ProjectMaker::MakeDir()
     {
         if (!Util::CreateDir(SourceDir + subSourceDirName[i] + _T("\\")))
         {
-            return false;
+            ERROR(ERROR_DEFAULT);
         }
     }
 
@@ -138,7 +152,7 @@ bool ProjectMaker::MakeProjFile()
 
     if (!Util::CreateFile_(filePath))
     {
-        return false;
+        ERROR(ERROR_DEFAULT);
     }
 
 	std::wstring templateStr = _T("<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
@@ -346,10 +360,10 @@ bool ProjectMaker::MakeProjFile()
 
 	if (pFile == NULL)
 	{
-		return false;
+		ERROR(ERROR_DEFAULT);
 	}
 
-	char head[] = { 0xef, 0xbb, 0xbf };
+	char head[] = { (char)0xef, (char)0xbb, (char)0xbf };
 	::fwrite(head, 1, 3, pFile);
 	::fwrite(utf8Str.c_str(), 1, utf8Str.length(), pFile);
 	::fclose(pFile);
@@ -362,7 +376,7 @@ bool ProjectMaker::MakeFiltersFile()
 
 	if (!Util::CreateFile_(filePath))
 	{
-		return false;
+		ERROR(ERROR_DEFAULT);
 	}
 
 	std::wstring templateStr = _T("<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
@@ -418,10 +432,10 @@ bool ProjectMaker::MakeFiltersFile()
 
 	if (pFile == NULL)
 	{
-		return false;
+		ERROR(ERROR_DEFAULT);
 	}
 
-	char head[] = { 0xef, 0xbb, 0xbf };
+	char head[] = { (char)0xef, (char)0xbb, (char)0xbf };
 	::fwrite(head, 1, 3, pFile);
 	::fwrite(utf8Str.c_str(), 1, utf8Str.length(), pFile);
 	::fclose(pFile);
@@ -434,14 +448,14 @@ bool ProjectMaker::MakeSrcFile()
 
 	if (!Util::CreateFile_(hPath))
 	{
-		return false;
+		ERROR(ERROR_DEFAULT);
 	}
 
 	std::wstring cPath = m_projectDir + _T("source\\c\\") + m_projectProperty.m_projectName + _T(".cpp");
 
 	if (!Util::CreateFile_(cPath))
 	{
-		return false;
+		ERROR(ERROR_DEFAULT);
 	}
 
 	return true;

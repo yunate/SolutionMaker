@@ -30,7 +30,7 @@ namespace Util
     */
     bool DeleteFile_(const std::wstring& dfilePath);
 
-    /** 删除文件夹
+    /** 删除文件夹 (不包括自身)
     @param [in] dirPath 文件夹路径
     */
     bool DeleteDir(const std::wstring& dirPath);

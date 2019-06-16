@@ -10,7 +10,7 @@
     <Filter Include="src">
       <UniqueIdentifier>{1341b42f-de00-4bcf-a172-6dfabf7ea050}</UniqueIdentifier>
     </Filter>
-    <Filter Include="vender">
+    <Filter Include="vendor">
       <UniqueIdentifier>{717e1f38-9fa3-4b8d-9b9e-7f48aba93e7d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -19,13 +19,13 @@
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\common_vendor\File\FileAndDirUtil.h">
-      <Filter>vender</Filter>
+      <Filter>vendor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\common_vendor\GUID\GUID.h">
-      <Filter>vender</Filter>
+      <Filter>vendor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\common_vendor\codecvt\CodeCvt.h">
-      <Filter>vender</Filter>
+      <Filter>vendor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -33,13 +33,13 @@
       <Filter>c</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\common_vendor\File\FileAndDirUtil.cpp">
-      <Filter>vender</Filter>
+      <Filter>vendor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\common_vendor\GUID\GUID.cpp">
-      <Filter>vender</Filter>
+      <Filter>vendor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\common_vendor\codecvt\CodeCvt.cpp">
-      <Filter>vender</Filter>
+      <Filter>vendor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
