@@ -37,11 +37,6 @@ bool ProjectMaker::MakeProject()
         return false;
     }
 
-	if (!MakeFiltersFile())
-	{
-		return false;
-	}
-
 	if (!MakeSrcFile())
 	{
 		return false;
@@ -171,27 +166,32 @@ bool ProjectMaker::MakeProjFile()
 		"    <VCProjectVersion>15.0</VCProjectVersion>\r\n"
 		"    <ProjectGuid>PROJECT_GUID</ProjectGuid>\r\n"
 		"    <RootNamespace>PROJECTNAME1</RootNamespace>\r\n"
+		"    <WindowsTargetPlatformVersion>7.0</WindowsTargetPlatformVersion>\r\n"
 		"  </PropertyGroup>\r\n"
 		"  <Import Project=\"$(VCTargetsPath)\\Microsoft.Cpp.Default.props\" />\r\n"
 		"  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|Win32'\" Label=\"Configuration\">\r\n"
 		"    <ConfigurationType>CONFIGURATION_TYPE</ConfigurationType>\r\n"
 		"    <UseDebugLibraries>true</UseDebugLibraries>\r\n"
+		"    <PlatformToolset>v140</PlatformToolset>\r\n"
 		"    <CharacterSet>CHARACTER_SET</CharacterSet>\r\n"
 		"  </PropertyGroup>\r\n"
 		"  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Release|Win32'\" Label=\"Configuration\">\r\n"
 		"    <ConfigurationType>CONFIGURATION_TYPE</ConfigurationType>\r\n"
 		"    <UseDebugLibraries>false</UseDebugLibraries>\r\n"
+		"    <PlatformToolset>v140</PlatformToolset>\r\n"
 		"    <WholeProgramOptimization>true</WholeProgramOptimization>\r\n"
 		"    <CharacterSet>CHARACTER_SET</CharacterSet>\r\n"
 		"  </PropertyGroup>\r\n"
 		"  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|x64'\" Label=\"Configuration\">\r\n"
 		"    <ConfigurationType>CONFIGURATION_TYPE</ConfigurationType>\r\n"
 		"    <UseDebugLibraries>true</UseDebugLibraries>\r\n"
+		"    <PlatformToolset>v140</PlatformToolset>\r\n"
 		"    <CharacterSet>CHARACTER_SET</CharacterSet>\r\n"
 		"  </PropertyGroup>\r\n"
 		"  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Release|x64'\" Label=\"Configuration\">\r\n"
 		"    <ConfigurationType>CONFIGURATION_TYPE</ConfigurationType>\r\n"
 		"    <UseDebugLibraries>false</UseDebugLibraries>\r\n"
+		"    <PlatformToolset>v140</PlatformToolset>\r\n"
 		"    <WholeProgramOptimization>true</WholeProgramOptimization>\r\n"
 		"    <CharacterSet>CHARACTER_SET</CharacterSet>\r\n"
 		"  </PropertyGroup>\r\n"
@@ -402,17 +402,16 @@ bool ProjectMaker::MakeFiltersFile()
 	codecvt::UTF8ToUTF16(Util::GenerateGuid(), sC_GUID);
 	codecvt::UTF8ToUTF16(Util::GenerateGuid(), sSRC_GUID);
 	codecvt::UTF8ToUTF16(Util::GenerateGuid(), sVENDOR_GUID);
+
 	replace_str(templateStr, _T("H_GUID"), sH_GUID);
 	replace_str(templateStr, _T("C_GUID"), sC_GUID);
 	replace_str(templateStr, _T("SRC_GUID"), sSRC_GUID);
 	replace_str(templateStr, _T("VENDOR_GUID"), sVENDOR_GUID);
 	replace_str(templateStr, _T("PROJECTNAME"), m_projectProperty.m_projectName);
 
-	// ×ªÂë
 	std::string utf8Str = "";
 	codecvt::UTF16ToUTF8(templateStr, utf8Str);
 
-	// Ð´ÎÄ¼þ
 	FILE* pFile = NULL;
 	::_wfopen_s(&pFile, filePath.c_str(), _T("wb"));
 

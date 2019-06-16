@@ -100,10 +100,20 @@ private:
     */
     bool MakeDir();
 
-    /** 生成文件
+    /** 生成.vcxproj文件
     @return 是否成功
     */
-    bool MakeFile();
+    bool MakeProjFile();
+
+	/** 生成.vcxproj.filters
+	@return 是否成功
+	*/
+	bool MakeFiltersFile();
+
+	/** 生成 .h .cpp
+	@return 是否成功
+	*/
+	bool MakeSrcFile();
 
 private:
     /** 期望生成的工程属性
