@@ -216,25 +216,25 @@ bool ProjectMaker::MakeProjFile()
 		"  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|Win32'\">\r\n"
 		"    <OutDir>$(ProjectDir)..\\bin\\$(Configuration)\\$(PlatForm)\\</OutDir>\r\n"
 		"    <IntDir>$(OutDir)tmp\\</IntDir>\r\n"
-		"    <IncludePath>$(ProjectDir)..\\source\\h\\;$(SolutionDir)common_vendor\\;$(IncludePath)</IncludePath>\r\n"
+		"    <IncludePath>$(ProjectDir)..\\source\\h\\;$(ProjectDir)..\\vendor\\;$(SolutionDir)common_vendor\\;$(IncludePath)</IncludePath>\r\n"
 		"    <LibraryPath>$(ProjectDir)..\\vendor\\;$(SolutionDir)common_vendor\\;$(LibraryPath)</LibraryPath>\r\n"
 		"  </PropertyGroup>\r\n"
 		"  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Release|Win32'\">\r\n"
 		"    <OutDir>$(ProjectDir)..\\bin\\$(Configuration)\\$(PlatForm)\\</OutDir>\r\n"
 		"    <IntDir>$(OutDir)tmp\\</IntDir>\r\n"
-		"    <IncludePath>$(ProjectDir)..\\source\\h\\;$(SolutionDir)common_vendor\\;$(IncludePath)</IncludePath>\r\n"
+		"    <IncludePath>$(ProjectDir)..\\source\\h\\;$(ProjectDir)..\\vendor\\;$(SolutionDir)common_vendor\\;$(IncludePath)</IncludePath>\r\n"
 		"    <LibraryPath>$(ProjectDir)..\\vendor\\;$(SolutionDir)common_vendor\\;$(LibraryPath)</LibraryPath>\r\n"
 		"  </PropertyGroup>\r\n"
 		"  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|x64'\">\r\n"
 		"    <OutDir>$(ProjectDir)..\\bin\\$(Configuration)\\$(PlatForm)\\</OutDir>\r\n"
 		"    <IntDir>$(OutDir)tmp\\</IntDir>\r\n"
-		"    <IncludePath>$(ProjectDir)..\\source\\h\\;$(SolutionDir)common_vendor\\;$(IncludePath)</IncludePath>\r\n"
+		"    <IncludePath>$(ProjectDir)..\\source\\h\\;$(ProjectDir)..\\vendor\\;$(SolutionDir)common_vendor\\;$(IncludePath)</IncludePath>\r\n"
 		"    <LibraryPath>$(ProjectDir)..\\vendor\\;$(SolutionDir)common_vendor\\;$(LibraryPath)</LibraryPath>\r\n"
 		"  </PropertyGroup>\r\n"
 		"  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Release|x64'\">\r\n"
 		"    <OutDir>$(ProjectDir)..\\bin\\$(Configuration)\\$(PlatForm)\\</OutDir>\r\n"
 		"    <IntDir>$(OutDir)tmp\\</IntDir>\r\n"
-		"    <IncludePath>$(ProjectDir)..\\source\\h\\;$(SolutionDir)common_vendor\\;$(IncludePath)</IncludePath>\r\n"
+		"    <IncludePath>$(ProjectDir)..\\source\\h\\;$(ProjectDir)..\\vendor\\;$(SolutionDir)common_vendor\\;$(IncludePath)</IncludePath>\r\n"
 		"    <LibraryPath>$(ProjectDir)..\\vendor\\;$(SolutionDir)common_vendor\\;$(LibraryPath)</LibraryPath>\r\n"
 		"  </PropertyGroup>\r\n"
 		"  <ItemDefinitionGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|Win32'\">\r\n"
@@ -453,9 +453,9 @@ int main()
     ProjectProperty pro;
     pro.m_characterSet = UNICODE_TYPE;
     pro.m_configurationType = EXE;
-    pro.m_projectName = L"Projtest";
+    pro.m_projectName = L"Test";
     pro.m_runtimeLibraryType = STATIC;
-    ProjectMaker maker(pro, L"C:\\Users\\29976\\Desktop\\test", true);
+    ProjectMaker maker(pro, L"D:\\projects\\In2345\\mysln\\projects\\", true);
     bool b = maker.MakeProject();
     ::system("pause");
     return 1;
