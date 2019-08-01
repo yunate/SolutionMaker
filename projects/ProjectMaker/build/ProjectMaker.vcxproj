@@ -19,49 +19,49 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\common_vendor\codecvt\CodeCvt.h" />
+    <ClInclude Include="..\..\..\common_vendor\codecvt\code_cvt.h" />
     <ClInclude Include="..\..\..\common_vendor\File\FileAndDirUtil.h" />
     <ClInclude Include="..\..\..\common_vendor\GUID\GUID.h" />
-    <ClInclude Include="..\source\h\ProjectMaker.h" />
+    <ClInclude Include="..\source\ProjectMaker\ProjectMaker.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\common_vendor\codecvt\CodeCvt.cpp" />
+    <ClCompile Include="..\..\..\common_vendor\codecvt\code_cvt.cpp" />
     <ClCompile Include="..\..\..\common_vendor\File\FileAndDirUtil.cpp" />
     <ClCompile Include="..\..\..\common_vendor\GUID\GUID.cpp" />
-    <ClCompile Include="..\source\c\ProjectMaker.cpp" />
+    <ClCompile Include="..\source\ProjectMaker\ProjectMaker.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{C056521F-A7D9-4D07-8F71-2ED9B53667E1}</ProjectGuid>
     <RootNamespace>ProjectMaker1</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
