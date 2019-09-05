@@ -334,7 +334,7 @@ bool ProjectMaker::MakeProjFile()
 
     std::wstring projectNameStr = m_projectProperty.m_projectName;
     std::wstring GUIDStr = _T("");
-    codecvt::UTF8ToUTF16_Multi(Util::GenerateGuid(), GUIDStr);
+    codecvt::UTF8ToUTF16_STD(Util::GenerateGuid(), GUIDStr);
     replace_str(templateStr, _T("CONFIGURATION_TYPE"), configurationStr);
     replace_str(templateStr, _T("CHARACTER_SET"), characterSetStr);
     replace_str(templateStr, _T("RUNTIME_LIBRARY_TYPE_DEBUG"), runtimeLibraryDbgStr);
@@ -342,7 +342,7 @@ bool ProjectMaker::MakeProjFile()
     replace_str(templateStr, _T("PROJECTNAME"), projectNameStr);
     replace_str(templateStr, _T("PROJECT_GUID"), GUIDStr);
     std::string utf8Str = "";
-    codecvt::UTF16ToUTF8_Multi(templateStr, utf8Str);
+    codecvt::UTF16ToUTF8_STD(templateStr, utf8Str);
 
     FILE* pFile = NULL;
     ::_wfopen_s(&pFile, filePath.c_str(), _T("wb"));
@@ -397,9 +397,9 @@ bool ProjectMaker::MakeFiltersFile()
     std::wstring sCODE_GUID = _T("");
     std::wstring sRESOURCES_GUID = _T("");
     std::wstring sVENDOR_GUID = _T("");
-    codecvt::UTF8ToUTF16_Multi(Util::GenerateGuid(), sCODE_GUID);
-    codecvt::UTF8ToUTF16_Multi(Util::GenerateGuid(), sRESOURCES_GUID);
-    codecvt::UTF8ToUTF16_Multi(Util::GenerateGuid(), sVENDOR_GUID);
+    codecvt::UTF8ToUTF16_STD(Util::GenerateGuid(), sCODE_GUID);
+    codecvt::UTF8ToUTF16_STD(Util::GenerateGuid(), sRESOURCES_GUID);
+    codecvt::UTF8ToUTF16_STD(Util::GenerateGuid(), sVENDOR_GUID);
     replace_str(templateStr, _T("CODE_GUID"), sCODE_GUID);
     replace_str(templateStr, _T("RESOURCES_GUID"), sRESOURCES_GUID);
     replace_str(templateStr, _T("VENDOR_GUID"), sVENDOR_GUID);
@@ -407,7 +407,7 @@ bool ProjectMaker::MakeFiltersFile()
 
     // ×ªÂë
     std::string utf8Str = "";
-    codecvt::UTF16ToUTF8_Multi(templateStr, utf8Str);
+    codecvt::UTF16ToUTF8_STD(templateStr, utf8Str);
 
     // Ð´ÎÄ¼þ
     FILE* pFile = NULL;

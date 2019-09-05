@@ -128,7 +128,8 @@ namespace codecvt
             return false;
         }
 
-        des.resize(destLen);
+        des.resize(destLen + 1);
+        des[destLen] = 0;
         bool res = Utf16_To_Utf8((char *)des.c_str(), &destLen, src.c_str(), src.length());
         return res;
     }
@@ -221,7 +222,8 @@ namespace codecvt
             return false;
         }
 
-        des.resize(destLen);
+        des.resize(destLen + 1);
+        des[destLen] = 0;
         bool res = Utf8_To_Utf16((wchar_t *)des.c_str(), &destLen, src.c_str(), src.length());
         return res;
     }
