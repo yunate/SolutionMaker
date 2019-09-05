@@ -1,45 +1,42 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="h">
-      <UniqueIdentifier>{a1b374b2-bc35-4c03-983b-091324cd3154}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="c">
-      <UniqueIdentifier>{df54482b-ce87-4e5d-a31e-5141f18e135a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{1341b42f-de00-4bcf-a172-6dfabf7ea050}</UniqueIdentifier>
     </Filter>
-    <Filter Include="vendor">
+    <Filter Include="vender">
       <UniqueIdentifier>{717e1f38-9fa3-4b8d-9b9e-7f48aba93e7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ProjectMaker">
+      <UniqueIdentifier>{b79a220a-06a3-4c74-bced-000b23c56603}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\source\h\ProjectMaker.h">
-      <Filter>h</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\common_vendor\File\FileAndDirUtil.h">
-      <Filter>vendor</Filter>
+      <Filter>vender</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\common_vendor\GUID\GUID.h">
-      <Filter>vendor</Filter>
+      <Filter>vender</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\common_vendor\codecvt\CodeCvt.h">
-      <Filter>vendor</Filter>
+    <ClInclude Include="..\..\..\common_vendor\codecvt\code_cvt.h">
+      <Filter>vender</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\ProjectMaker\ProjectMaker.h">
+      <Filter>ProjectMaker</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\source\c\ProjectMaker.cpp">
-      <Filter>c</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\common_vendor\File\FileAndDirUtil.cpp">
-      <Filter>vendor</Filter>
+      <Filter>vender</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\common_vendor\GUID\GUID.cpp">
-      <Filter>vendor</Filter>
+      <Filter>vender</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\common_vendor\codecvt\CodeCvt.cpp">
-      <Filter>vendor</Filter>
+    <ClCompile Include="..\..\..\common_vendor\codecvt\code_cvt.cpp">
+      <Filter>vender</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\ProjectMaker\ProjectMaker.cpp">
+      <Filter>ProjectMaker</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

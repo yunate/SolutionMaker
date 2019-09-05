@@ -115,15 +115,15 @@ private:
     */
     bool MakeProjFile();
 
-	/** 生成.vcxproj.filters
-	@return 是否成功
-	*/
-	bool MakeFiltersFile();
+    /** 生成.vcxproj.filters
+    @return 是否成功
+    */
+    bool MakeFiltersFile();
 
-	/** 生成 .h .cpp
-	@return 是否成功
-	*/
-	bool MakeSrcFile();
+    /** 生成 .h .cpp
+    @return 是否成功
+    */
+    bool MakeSrcFile();
 
 private:
     /** 期望生成的工程属性
