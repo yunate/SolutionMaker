@@ -200,26 +200,26 @@ bool ProjectMaker::MakeProjFile()
         "  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|Win32'\">\r\n"
         "    <OutDir>$(ProjectDir)..\\bin\\$(Configuration)\\$(PlatForm)\\</OutDir>\r\n"
         "    <IntDir>$(OutDir)tmp\\</IntDir>\r\n"
-        "    <IncludePath>$(ProjectDir)..\\source\\;$(ProjectDir)..\\vendor\\;$(SolutionDir)common_vendor\\;$(IncludePath)</IncludePath>\r\n"
-        "    <LibraryPath>$(ProjectDir)..\\vendor\\;$(SolutionDir)common_vendor\\;$(LibraryPath)</LibraryPath>\r\n"
+        "    <IncludePath>$(ProjectDir)..\\src\\;$(ProjectDir)..\\vendor\\;$(IncludePath)</IncludePath>\r\n"
+        "    <LibraryPath>$(ProjectDir)..\\vendor\\;$(LibraryPath)</LibraryPath>\r\n"
         "  </PropertyGroup>\r\n"
         "  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Release|Win32'\">\r\n"
         "    <OutDir>$(ProjectDir)..\\bin\\$(Configuration)\\$(PlatForm)\\</OutDir>\r\n"
         "    <IntDir>$(OutDir)tmp\\</IntDir>\r\n"
-        "    <IncludePath>$(ProjectDir)..\\source\\;$(ProjectDir)..\\vendor\\;$(SolutionDir)common_vendor\\;$(IncludePath)</IncludePath>\r\n"
-        "    <LibraryPath>$(ProjectDir)..\\vendor\\;$(SolutionDir)common_vendor\\;$(LibraryPath)</LibraryPath>\r\n"
+        "    <IncludePath>$(ProjectDir)..\\src\\;$(ProjectDir)..\\vendor\\;$(IncludePath)</IncludePath>\r\n"
+        "    <LibraryPath>$(ProjectDir)..\\vendor\\;$(LibraryPath)</LibraryPath>\r\n"
         "  </PropertyGroup>\r\n"
         "  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|x64'\">\r\n"
         "    <OutDir>$(ProjectDir)..\\bin\\$(Configuration)\\$(PlatForm)\\</OutDir>\r\n"
         "    <IntDir>$(OutDir)tmp\\</IntDir>\r\n"
-        "    <IncludePath>$(ProjectDir)..\\source\\;$(ProjectDir)..\\vendor\\;$(SolutionDir)common_vendor\\;$(IncludePath)</IncludePath>\r\n"
-        "    <LibraryPath>$(ProjectDir)..\\vendor\\;$(SolutionDir)common_vendor\\;$(LibraryPath)</LibraryPath>\r\n"
+        "    <IncludePath>$(ProjectDir)..\\src\\;$(ProjectDir)..\\vendor\\;$(IncludePath)</IncludePath>\r\n"
+        "    <LibraryPath>$(ProjectDir)..\\vendor\\;$(LibraryPath)</LibraryPath>\r\n"
         "  </PropertyGroup>\r\n"
         "  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Release|x64'\">\r\n"
         "    <OutDir>$(ProjectDir)..\\bin\\$(Configuration)\\$(PlatForm)\\</OutDir>\r\n"
         "    <IntDir>$(OutDir)tmp\\</IntDir>\r\n"
-        "    <IncludePath>$(ProjectDir)..\\source\\;$(ProjectDir)..\\vendor\\;$(SolutionDir)common_vendor\\;$(IncludePath)</IncludePath>\r\n"
-        "    <LibraryPath>$(ProjectDir)..\\vendor\\;$(SolutionDir)common_vendor\\;$(LibraryPath)</LibraryPath>\r\n"
+        "    <IncludePath>$(ProjectDir)..\\src\\;$(ProjectDir)..\\vendor\\;$(IncludePath)</IncludePath>\r\n"
+        "    <LibraryPath>$(ProjectDir)..\\vendor\\;$(LibraryPath)</LibraryPath>\r\n"
         "  </PropertyGroup>\r\n"
         "  <ItemDefinitionGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|Win32'\">\r\n"
         "    <ClCompile>\r\n"
@@ -406,7 +406,7 @@ int main()
     ProjectProperty pro;
     pro.m_characterSet = UNICODE_TYPE;
     pro.m_configurationType = EXE;
-    pro.m_projectName = L"HostCore";
+    pro.m_projectName = L"Hosting";
     pro.m_runtimeLibraryType = STATIC;
     ProjectMaker maker(pro, L"D:\\workspaces\\C++_workspaces\\SimpleApp\\", true);
     bool b = maker.MakeProject();
