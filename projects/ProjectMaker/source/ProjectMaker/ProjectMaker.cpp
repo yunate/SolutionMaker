@@ -2,6 +2,7 @@
 #include "file/FileAndDirUtil.h"
 #include "GUID/GUID.h"
 #include "codecvt/code_cvt.h"
+#include <Windows.h>
 
 template<typename T, unsigned int N>
 char(&array_size_fake_func(T(&)[N]))[N];
@@ -86,22 +87,11 @@ bool ProjectMaker::PrepareMakeDir()
 bool ProjectMaker::MakeDir()
 {
     // 生成文件夹
-    std::wstring subDirName[] = {_T("bin"), _T("build"), _T("doc"), _T("source"), _T("test"), _T("vendor"), };
+    std::wstring subDirName[] = {_T("bin"), _T("build"), _T("doc"), _T("res"), _T("src"), _T("test"), _T("vendor")};
 
     for (int i = 0; i < MYARRAYSIZE(subDirName); ++i)
     {
         if (!Util::CreateDir(m_projectDir + subDirName[i] + _T("\\")))
-        {
-            return false;
-        }
-    }
-
-    std::wstring SourceDir = m_projectDir + _T("source") + _T("\\");
-    std::wstring subSourceDirName[] = {m_projectProperty.m_projectName, _T("resources")};
-
-    for (int i = 0; i < MYARRAYSIZE(subSourceDirName); ++i)
-    {
-        if (!Util::CreateDir(SourceDir + subSourceDirName[i] + _T("\\")))
         {
             return false;
         }
@@ -160,15 +150,6 @@ bool ProjectMaker::MakeProjFile()
         "      <Configuration>Release</Configuration>\r\n"
         "      <Platform>x64</Platform>\r\n"
         "    </ProjectConfiguration>\r\n"
-        "  </ItemGroup>\r\n"
-        "  <ItemGroup>\r\n"
-        "    <ClInclude Include=\"..\\source\\PROJECTNAME\\PROJECTNAME.h\" />\r\n"
-        "  </ItemGroup>\r\n"
-        "  <ItemGroup>\r\n"
-        "    <ClCompile Include=\"..\\source\\PROJECTNAME\\PROJECTNAME.cpp\" />\r\n"
-        "  </ItemGroup>\r\n"
-        "  <ItemGroup>\r\n"
-        "    <ClCompile Include=\"..\\source\\main.cpp\" />\r\n"
         "  </ItemGroup>\r\n"
         "  <PropertyGroup Label=\"Globals\">\r\n"
         "    <VCProjectVersion>15.0</VCProjectVersion>\r\n"
@@ -371,25 +352,15 @@ bool ProjectMaker::MakeFiltersFile()
     std::wstring templateStr = _T("<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
         "<Project ToolsVersion=\"4.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\r\n"
         "  <ItemGroup>\r\n"
-        "    <Filter Include=\"PROJECTNAME\">\r\n"
+        "    <Filter Include=\"src\">\r\n"
         "      <UniqueIdentifier>CODE_GUID</UniqueIdentifier>\r\n"
         "    </Filter>\r\n"
-        "    <Filter Include=\"resources\">\r\n"
+        "    <Filter Include=\"res\">\r\n"
         "      <UniqueIdentifier>RESOURCES_GUID</UniqueIdentifier>\r\n"
         "    </Filter>\r\n"
         "    <Filter Include=\"vendor\">\r\n"
         "      <UniqueIdentifier>VENDOR_GUID</UniqueIdentifier>\r\n"
         "    </Filter>\r\n"
-        "  </ItemGroup>\r\n"
-        "  <ItemGroup>\r\n"
-        "    <ClInclude Include=\"..\\source\\PROJECTNAME\\PROJECTNAME.h\">\r\n"
-        "      <Filter>PROJECTNAME</Filter>\r\n"
-        "    </ClInclude>\r\n"
-        "  </ItemGroup>\r\n"
-        "  <ItemGroup>\r\n"
-        "    <ClCompile Include=\"..\\source\\PROJECTNAME\\PROJECTNAME.cpp\">\r\n"
-        "      <Filter>PROJECTNAME</Filter>\r\n"
-        "    </ClCompile>\r\n"
         "  </ItemGroup>\r\n"
         "</Project>");
 
@@ -427,39 +398,17 @@ bool ProjectMaker::MakeFiltersFile()
 
 bool ProjectMaker::MakeSrcFile()
 {
-    std::wstring hPath = m_projectDir + _T("source\\") + m_projectProperty.m_projectName + L"\\" + m_projectProperty.m_projectName + _T(".h");
-
-    if (!Util::CreateFile_(hPath))
-    {
-        return false;
-    }
-
-    std::wstring cPath = m_projectDir + _T("source\\") + m_projectProperty.m_projectName + L"\\" + m_projectProperty.m_projectName + _T(".cpp");
-
-    if (!Util::CreateFile_(cPath))
-    {
-        return false;
-    }
-
-    std::wstring mainPath = m_projectDir + _T("source\\main.cpp");
-    
-    if (!Util::CreateFile_(mainPath))
-    {
-        return false;
-    }
-
     return true;
 }
 
-#include <Windows.h>
 int main()
 {
     ProjectProperty pro;
     pro.m_characterSet = UNICODE_TYPE;
     pro.m_configurationType = EXE;
-    pro.m_projectName = L"test3";
+    pro.m_projectName = L"HostCore";
     pro.m_runtimeLibraryType = STATIC;
-    ProjectMaker maker(pro, L"D:\\projects\\In2345\\mysln\\projects", true);
+    ProjectMaker maker(pro, L"D:\\workspaces\\C++_workspaces\\SimpleApp\\", true);
     bool b = maker.MakeProject();
     ::system("pause");
     return 1;
