@@ -43,6 +43,7 @@ typedef struct ProjectProperty
 {
     ProjectProperty() :
         m_projectName(_T("")),
+        m_userProps(_T("")),
         m_configurationType(EXE),
         m_characterSet(UNICODE_TYPE),
         m_runtimeLibraryType(STATIC)
@@ -65,6 +66,10 @@ typedef struct ProjectProperty
     /** 期望的工程名称
     */
     std::wstring m_projectName;
+
+    /** 用户配置名称，用来使用用户自定义宏
+    */
+    std::wstring m_userProps;
 
     /** 期望的生成文件
     */
@@ -124,6 +129,10 @@ private:
     @return 是否成功
     */
     bool MakeSrcFile();
+
+    /** 写用户属性文件
+    */
+    bool MakeUserPropsFile();
 
 private:
     /** 期望生成的工程属性

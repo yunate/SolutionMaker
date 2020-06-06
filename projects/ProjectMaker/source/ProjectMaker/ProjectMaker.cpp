@@ -2,6 +2,7 @@
 #include "file/FileAndDirUtil.h"
 #include "GUID/GUID.h"
 #include "codecvt/code_cvt.h"
+#include <vector>
 #include <Windows.h>
 
 template<typename T, unsigned int N>
@@ -86,14 +87,29 @@ bool ProjectMaker::PrepareMakeDir()
 
 bool ProjectMaker::MakeDir()
 {
-    // 生成文件夹
-    std::wstring subDirName[] = {_T("bin"), _T("build"), _T("doc"), _T("res"), _T("src"), _T("test"), _T("vendor")};
-
-    for (int i = 0; i < MYARRAYSIZE(subDirName); ++i)
+    // m_projectDir 下
     {
-        if (!Util::CreateDir(m_projectDir + subDirName[i] + _T("\\")))
+        std::vector<std::wstring> subDirName { _T("build"), _T("doc"), _T("res"), _T("src"), _T("test"), _T("vendor") };
+
+        for (int i = 0; i < subDirName.size(); ++i)
         {
-            return false;
+            if (!Util::CreateDir(m_projectDir + subDirName[i] + _T("\\")))
+            {
+                return false;
+            }
+        }
+    }
+
+    // m_rootDir 下
+    {
+        std::vector<std::wstring> subDirName{ _T("bin") };
+
+        for (int i = 0; i < subDirName.size(); ++i)
+        {
+            if (!Util::CreateDir(m_rootDir + subDirName[i] + _T("\\")))
+            {
+                return false;
+            }
         }
     }
 
@@ -183,6 +199,7 @@ bool ProjectMaker::MakeProjFile()
         "  <ImportGroup Label=\"ExtensionSettings\">\r\n"
         "  </ImportGroup>\r\n"
         "  <ImportGroup Label=\"Shared\">\r\n"
+        "    USER_PROPS"
         "  </ImportGroup>\r\n"
         "  <ImportGroup Label=\"PropertySheets\" Condition=\"'$(Configuration)|$(Platform)'=='Debug|Win32'\">\r\n"
         "    <Import Project=\"$(UserRootDir)\\Microsoft.Cpp.$(Platform).user.props\" Condition=\"exists('$(UserRootDir)\\Microsoft.Cpp.$(Platform).user.props')\" Label=\"LocalAppDataPlatform\" />\r\n"
@@ -198,26 +215,26 @@ bool ProjectMaker::MakeProjFile()
         "  </ImportGroup>\r\n"
         "  <PropertyGroup Label=\"UserMacros\" />\r\n"
         "  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|Win32'\">\r\n"
-        "    <OutDir>$(ProjectDir)..\\bin\\$(Configuration)\\$(PlatForm)\\</OutDir>\r\n"
-        "    <IntDir>$(OutDir)tmp\\</IntDir>\r\n"
+        "    <OutDir>$(SolutionDir)bin\\$(Configuration)_$(PlatForm)\\</OutDir>\r\n"
+        "    <IntDir>$(OutDir)tmp\\$(ProjectName)</IntDir>\r\n"
         "    <IncludePath>$(ProjectDir)..\\src\\;$(ProjectDir)..\\vendor\\;$(IncludePath)</IncludePath>\r\n"
         "    <LibraryPath>$(ProjectDir)..\\vendor\\;$(LibraryPath)</LibraryPath>\r\n"
         "  </PropertyGroup>\r\n"
         "  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Release|Win32'\">\r\n"
-        "    <OutDir>$(ProjectDir)..\\bin\\$(Configuration)\\$(PlatForm)\\</OutDir>\r\n"
-        "    <IntDir>$(OutDir)tmp\\</IntDir>\r\n"
+        "    <OutDir>$(SolutionDir)bin\\$(Configuration)_$(PlatForm)\\</OutDir>\r\n"
+        "    <IntDir>$(OutDir)tmp\\$(ProjectName)</IntDir>\r\n"
         "    <IncludePath>$(ProjectDir)..\\src\\;$(ProjectDir)..\\vendor\\;$(IncludePath)</IncludePath>\r\n"
         "    <LibraryPath>$(ProjectDir)..\\vendor\\;$(LibraryPath)</LibraryPath>\r\n"
         "  </PropertyGroup>\r\n"
         "  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|x64'\">\r\n"
-        "    <OutDir>$(ProjectDir)..\\bin\\$(Configuration)\\$(PlatForm)\\</OutDir>\r\n"
-        "    <IntDir>$(OutDir)tmp\\</IntDir>\r\n"
+        "    <OutDir>$(SolutionDir)bin\\$(Configuration)_$(PlatForm)\\</OutDir>\r\n"
+        "    <IntDir>$(OutDir)tmp\\$(ProjectName)</IntDir>\r\n"
         "    <IncludePath>$(ProjectDir)..\\src\\;$(ProjectDir)..\\vendor\\;$(IncludePath)</IncludePath>\r\n"
         "    <LibraryPath>$(ProjectDir)..\\vendor\\;$(LibraryPath)</LibraryPath>\r\n"
         "  </PropertyGroup>\r\n"
         "  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Release|x64'\">\r\n"
-        "    <OutDir>$(ProjectDir)..\\bin\\$(Configuration)\\$(PlatForm)\\</OutDir>\r\n"
-        "    <IntDir>$(OutDir)tmp\\</IntDir>\r\n"
+        "    <OutDir>$(SolutionDir)bin\\$(Configuration)_$(PlatForm)\\</OutDir>\r\n"
+        "    <IntDir>$(OutDir)tmp\\$(ProjectName)</IntDir>\r\n"
         "    <IncludePath>$(ProjectDir)..\\src\\;$(ProjectDir)..\\vendor\\;$(IncludePath)</IncludePath>\r\n"
         "    <LibraryPath>$(ProjectDir)..\\vendor\\;$(LibraryPath)</LibraryPath>\r\n"
         "  </PropertyGroup>\r\n"
@@ -313,6 +330,12 @@ bool ProjectMaker::MakeProjFile()
         runtimeLibraryStr = _T("MultiThreadedDLL");
     }
 
+    std::wstring userProps = _T("");
+    if (m_projectProperty.m_userProps != _T(""))
+    {
+        userProps = _T("<Import Project=\"$(SolutionDir)") + m_projectProperty.m_userProps + _T("\" />");
+    }
+
     std::wstring projectNameStr = m_projectProperty.m_projectName;
     std::wstring GUIDStr = _T("");
     codecvt::UTF8ToUTF16_Multi(Util::GenerateGuid(), GUIDStr);
@@ -322,6 +345,7 @@ bool ProjectMaker::MakeProjFile()
     replace_str(templateStr, _T("RUNTIME_LIBRARY_TYPE_RELEASE"), runtimeLibraryStr);
     replace_str(templateStr, _T("PROJECTNAME"), projectNameStr);
     replace_str(templateStr, _T("PROJECT_GUID"), GUIDStr);
+    replace_str(templateStr, _T("USER_PROPS"), userProps);
     std::string utf8Str = "";
     codecvt::UTF16ToUTF8_Multi(templateStr, utf8Str);
 
@@ -398,6 +422,73 @@ bool ProjectMaker::MakeFiltersFile()
 
 bool ProjectMaker::MakeSrcFile()
 {
+    MakeUserPropsFile();
+    return true;
+}
+
+bool ProjectMaker::MakeUserPropsFile()
+{
+    if (m_projectProperty.m_userProps.length() == 0) 
+    {
+        return true;
+    }
+
+    std::wstring filePath = m_rootDir + m_projectProperty.m_userProps;
+
+    if (Util::IsFileExist(filePath))
+    {
+        return true;
+    }
+
+    if (!Util::CreateFile_(filePath))
+    {
+        return false;
+    }
+
+    std::wstring templateStr = _T("<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
+                                  "<Project ToolsVersion=\"4.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\r\n"
+                                  "  <ImportGroup Label=\"PropertySheets\" />\r\n"
+                                  "  <PropertyGroup Label=\"UserMacros\">\r\n"
+                                  "    <AppName>SimpleApp</AppName>\r\n"
+                                  "  </PropertyGroup>\r\n"
+                                  "  <PropertyGroup />\r\n"
+                                  "  <ItemDefinitionGroup />\r\n"
+                                  "  <ItemGroup>\r\n"
+                                  "    <BuildMacro Include=\"AppName\">\r\n"
+                                  "      <Value>$(AppName)</Value>\r\n"
+                                  "    </BuildMacro>\r\n"
+                                  "  </ItemGroup>\r\n"
+                                  "</Project>\r\n");
+
+    // 替换
+    std::wstring sCODE_GUID = _T("");
+    std::wstring sRESOURCES_GUID = _T("");
+    std::wstring sVENDOR_GUID = _T("");
+    codecvt::UTF8ToUTF16_Multi(Util::GenerateGuid(), sCODE_GUID);
+    codecvt::UTF8ToUTF16_Multi(Util::GenerateGuid(), sRESOURCES_GUID);
+    codecvt::UTF8ToUTF16_Multi(Util::GenerateGuid(), sVENDOR_GUID);
+    replace_str(templateStr, _T("CODE_GUID"), sCODE_GUID);
+    replace_str(templateStr, _T("RESOURCES_GUID"), sRESOURCES_GUID);
+    replace_str(templateStr, _T("VENDOR_GUID"), sVENDOR_GUID);
+    replace_str(templateStr, _T("PROJECTNAME"), m_projectProperty.m_projectName);
+
+    // 转码
+    std::string utf8Str = "";
+    codecvt::UTF16ToUTF8_Multi(templateStr, utf8Str);
+
+    // 写文件
+    FILE* pFile = NULL;
+    ::_wfopen_s(&pFile, filePath.c_str(), _T("wb"));
+
+    if (pFile == NULL)
+    {
+        return false;
+    }
+
+    char head[] = { (char)0xef, (char)0xbb, (char)0xbf };
+    ::fwrite(head, 1, 3, pFile);
+    ::fwrite(utf8Str.c_str(), 1, utf8Str.length(), pFile);
+    ::fclose(pFile);
     return true;
 }
 
@@ -406,7 +497,8 @@ int main()
     ProjectProperty pro;
     pro.m_characterSet = UNICODE_TYPE;
     pro.m_configurationType = EXE;
-    pro.m_projectName = L"Hosting";
+    pro.m_projectName = L"Common";
+    pro.m_userProps = L"app.props";
     pro.m_runtimeLibraryType = STATIC;
     ProjectMaker maker(pro, L"D:\\workspaces\\C++_workspaces\\SimpleApp\\", true);
     bool b = maker.MakeProject();
