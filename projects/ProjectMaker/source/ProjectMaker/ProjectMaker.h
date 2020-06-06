@@ -42,8 +42,6 @@ enum PROJECTMAKER_ERROR
 typedef struct ProjectProperty
 {
     ProjectProperty() :
-        m_projectName(_T("")),
-        m_userProps(_T("")),
         m_configurationType(EXE),
         m_characterSet(UNICODE_TYPE),
         m_runtimeLibraryType(STATIC)
@@ -66,6 +64,10 @@ typedef struct ProjectProperty
     /** 期望的工程名称
     */
     std::wstring m_projectName;
+
+    /** 添加到的sln目录
+    */
+    std::wstring m_slnName;
 
     /** 用户配置名称，用来使用用户自定义宏
     */
@@ -125,6 +127,10 @@ private:
     */
     bool MakeFiltersFile();
 
+    /** 创建.Sln文件
+    */
+    bool MakeSlnFile();
+
     /** 生成 .h .cpp
     @return 是否成功
     */
@@ -153,7 +159,11 @@ private:
 
 	/** 失败原因
 	*/
-	PROJECTMAKER_ERROR m_LastError;
+    PROJECTMAKER_ERROR m_LastError = PROJECTMAKER_ERROR::ERROR_DEFAULT;
+
+    /** guid
+    */
+    std::wstring m_ProjectGUIDStr;
 };
 
 #endif //__POJECT_MAKER_H_

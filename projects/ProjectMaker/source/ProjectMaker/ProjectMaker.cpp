@@ -2,6 +2,7 @@
 #include "file/FileAndDirUtil.h"
 #include "GUID/GUID.h"
 #include "codecvt/code_cvt.h"
+#include <iostream>
 #include <vector>
 #include <Windows.h>
 
@@ -24,31 +25,45 @@ ProjectMaker::~ProjectMaker()
 
 bool ProjectMaker::MakeProject()
 {
+    codecvt::UTF8ToUTF16_Multi(Util::GenerateGuid(), m_ProjectGUIDStr);
+
     if (!PrepareMakeDir())
     {
+        std::cout << "PrepareMakeDir() failure" <<std::endl;
         return false;
     }
 
     if (!MakeDir())
     {
+        std::cout << "MakeDir() failure" << std::endl;
         return false;
     }
 
     if (!MakeProjFile())
     {
+        std::cout << "MakeProjFile() failure" << std::endl;
         return false;
     }
 
     if (!MakeFiltersFile())
     {
+        std::cout << "MakeFiltersFile() failure" << std::endl;
+        return false;
+    }
+
+    if (!MakeSlnFile())
+    {
+        std::cout << "MakeSlnFile() failure" << std::endl;
         return false;
     }
 
     if (!MakeSrcFile())
     {
+        std::cout << "MakeSrcFile() failure" << std::endl;
         return false;
     }
 
+    std::cout << "success" << std::endl;
     return true;
 }
 
@@ -168,7 +183,6 @@ bool ProjectMaker::MakeProjFile()
         "    </ProjectConfiguration>\r\n"
         "  </ItemGroup>\r\n"
         "  <PropertyGroup Label=\"Globals\">\r\n"
-        "    <VCProjectVersion>15.0</VCProjectVersion>\r\n"
         "    <ProjectGuid>PROJECT_GUID</ProjectGuid>\r\n"
         "    <RootNamespace>PROJECTNAME1</RootNamespace>\r\n"
         "  </PropertyGroup>\r\n"
@@ -337,14 +351,12 @@ bool ProjectMaker::MakeProjFile()
     }
 
     std::wstring projectNameStr = m_projectProperty.m_projectName;
-    std::wstring GUIDStr = _T("");
-    codecvt::UTF8ToUTF16_Multi(Util::GenerateGuid(), GUIDStr);
     replace_str(templateStr, _T("CONFIGURATION_TYPE"), configurationStr);
     replace_str(templateStr, _T("CHARACTER_SET"), characterSetStr);
     replace_str(templateStr, _T("RUNTIME_LIBRARY_TYPE_DEBUG"), runtimeLibraryDbgStr);
     replace_str(templateStr, _T("RUNTIME_LIBRARY_TYPE_RELEASE"), runtimeLibraryStr);
     replace_str(templateStr, _T("PROJECTNAME"), projectNameStr);
-    replace_str(templateStr, _T("PROJECT_GUID"), GUIDStr);
+    replace_str(templateStr, _T("PROJECT_GUID"), m_ProjectGUIDStr);
     replace_str(templateStr, _T("USER_PROPS"), userProps);
     std::string utf8Str = "";
     codecvt::UTF16ToUTF8_Multi(templateStr, utf8Str);
@@ -358,7 +370,7 @@ bool ProjectMaker::MakeProjFile()
     }
 
     char head[] = { (char)0xef, (char)0xbb, (char)0xbf };
-    ::fwrite(head, 1, 3, pFile);
+    ::fwrite(head, 1, ARRAYSIZE(head), pFile);
     ::fwrite(utf8Str.c_str(), 1, utf8Str.length(), pFile);
     ::fclose(pFile);
     return true;
@@ -414,7 +426,129 @@ bool ProjectMaker::MakeFiltersFile()
     }
 
     char head[] = {(char)0xef, (char)0xbb, (char)0xbf };
-    ::fwrite(head, 1, 3, pFile);
+    ::fwrite(head, 1, ARRAYSIZE(head), pFile);
+    ::fwrite(utf8Str.c_str(), 1, utf8Str.length(), pFile);
+    ::fclose(pFile);
+    return true;
+}
+
+bool ProjectMaker::MakeSlnFile()
+{
+    char head[] = { (char)0xef, (char)0xbb, (char)0xbf };
+    std::wstring filePath = m_rootDir + m_projectProperty.m_slnName + _T(".sln");
+    std::wstring templateStr;
+
+    if (!Util::IsFileExist(filePath)) 
+    {
+        if (!Util::CreateFile_(filePath))
+        {
+            return false;
+        }
+
+        templateStr = _T("Microsoft Visual Studio Solution File, Format Version 12.00\r\n"
+                         "# Visual Studio Version 16\r\n"
+                         "VisualStudioVersion = 16.0.29613.14\r\n"
+                         "MinimumVisualStudioVersion = 10.0.40219.1\r\n"
+                         "Global\r\n"
+                         "  GlobalSection(SolutionProperties) = preSolution\r\n"
+                         "    HideSolutionNode = FALSE\r\n"
+                         "  EndGlobalSection\r\n"
+                         "  GlobalSection(ExtensibilityGlobals) = postSolution\r\n"
+                         "    SolutionGuid = SLN_GUID\r\n"
+                         "  EndGlobalSection\r\n"
+                         "EndGlobal\r\n");
+
+        // 替换
+        std::wstring sSLN_GUID = _T("");
+        codecvt::UTF8ToUTF16_Multi(Util::GenerateGuid(), sSLN_GUID);
+        replace_str(templateStr, _T("SLN_GUID"), sSLN_GUID);
+    }
+    else
+    {
+        // 读文件
+        FILE* pFile = NULL;
+        ::_wfopen_s(&pFile, filePath.c_str(), _T("rb"));
+
+        if (pFile == NULL)
+        {
+            return false;
+        }
+
+        bool readRes = false;
+        do 
+        {
+            ::fseek(pFile, 0, SEEK_END);
+            int fileLen = ::ftell(pFile);
+
+            if (fileLen < ARRAYSIZE(head))
+            {
+                break;
+            }
+
+            ::fseek(pFile, 0, SEEK_SET);
+            std::vector<char> buff(fileLen);
+            ::fread(buff.data(), 1, fileLen, pFile);
+
+            for (int i = 0; i < ARRAYSIZE(head); ++i)
+            {
+                if (head[i] != buff[i])
+                {
+                    break;
+                }
+            }
+
+            std::string tmp;
+            tmp.assign(buff.begin() + ARRAYSIZE(head), buff.end());
+            codecvt::UTF8ToUTF16_Multi(tmp, templateStr);
+            readRes = true;
+        } while (0);
+
+        ::fclose(pFile);
+
+        if (!readRes)
+        {
+            return false;
+        }
+    }
+
+    // 构建.vcxproj字符
+    std::wstring sSLN_PROJ_GUID = _T("");
+    codecvt::UTF8ToUTF16_Multi(Util::GenerateGuid(), sSLN_PROJ_GUID);
+    std::wstring proStr = _T("Project(\"SLN_PROJ_GUID\") = \"PROJECTNAME\", \"PROJEC_SUB_DIR\", \"PRO_GUID\"\r\nEndProject\r\n");
+    replace_str(proStr, _T("SLN_PROJ_GUID"), sSLN_PROJ_GUID);
+    replace_str(proStr, _T("PROJECTNAME"), m_projectProperty.m_projectName);
+    std::wstring proSubDir = m_projectProperty.m_projectName + _T("\\build\\") + m_projectProperty.m_projectName + _T(".vcxproj");
+    replace_str(proStr, _T("PROJEC_SUB_DIR"), proSubDir);
+    replace_str(proStr, _T("PRO_GUID"), m_ProjectGUIDStr);
+
+    // 将.vcxproj加到.sln中去
+    size_t pos = templateStr.find(_T("Global"));
+    if (pos == std::wstring::npos)
+    {
+        return false;
+    }
+
+    if (pos > templateStr.find(m_projectProperty.m_projectName))
+    {
+        std::wcout << _T("the ") << m_projectProperty.m_projectName << _T("has already exits") << std::endl;
+        return false;
+    }
+
+    templateStr.insert(pos, proStr);
+
+    // 写文件
+    FILE* pFile = NULL;
+    ::_wfopen_s(&pFile, filePath.c_str(), _T("wb"));
+
+    if (pFile == NULL)
+    {
+        return false;
+    }
+
+    // 转码
+    std::string utf8Str = "";
+    codecvt::UTF16ToUTF8_Multi(templateStr, utf8Str);
+    ::fwrite(head, 1, ARRAYSIZE(head), pFile);
     ::fwrite(utf8Str.c_str(), 1, utf8Str.length(), pFile);
     ::fclose(pFile);
     return true;
@@ -486,7 +620,7 @@ bool ProjectMaker::MakeUserPropsFile()
     }
 
     char head[] = { (char)0xef, (char)0xbb, (char)0xbf };
-    ::fwrite(head, 1, 3, pFile);
+    ::fwrite(head, 1, ARRAYSIZE(head), pFile);
     ::fwrite(utf8Str.c_str(), 1, utf8Str.length(), pFile);
     ::fclose(pFile);
     return true;
@@ -498,6 +632,7 @@ int main()
     pro.m_characterSet = UNICODE_TYPE;
     pro.m_configurationType = EXE;
     pro.m_projectName = L"Common";
+    pro.m_slnName = L"SimpleApp";  // 添加到sln或者创建sln，不能为空
     pro.m_userProps = L"app.props";
     pro.m_runtimeLibraryType = STATIC;
     ProjectMaker maker(pro, L"D:\\workspaces\\C++_workspaces\\SimpleApp\\", true);
