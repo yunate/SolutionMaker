@@ -230,25 +230,25 @@ bool ProjectMaker::MakeProjFile()
         "  <PropertyGroup Label=\"UserMacros\" />\r\n"
         "  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|Win32'\">\r\n"
         "    <OutDir>$(SolutionDir)bin\\$(Configuration)_$(PlatForm)\\</OutDir>\r\n"
-        "    <IntDir>$(OutDir)tmp\\$(ProjectName)</IntDir>\r\n"
+        "    <IntDir>$(OutDir)tmp\\$(ProjectName)\\</IntDir>\r\n"
         "    <IncludePath>$(ProjectDir)..\\src\\;$(ProjectDir)..\\vendor\\;$(IncludePath)</IncludePath>\r\n"
         "    <LibraryPath>$(ProjectDir)..\\vendor\\;$(LibraryPath)</LibraryPath>\r\n"
         "  </PropertyGroup>\r\n"
         "  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Release|Win32'\">\r\n"
         "    <OutDir>$(SolutionDir)bin\\$(Configuration)_$(PlatForm)\\</OutDir>\r\n"
-        "    <IntDir>$(OutDir)tmp\\$(ProjectName)</IntDir>\r\n"
+        "    <IntDir>$(OutDir)tmp\\$(ProjectName)\\</IntDir>\r\n"
         "    <IncludePath>$(ProjectDir)..\\src\\;$(ProjectDir)..\\vendor\\;$(IncludePath)</IncludePath>\r\n"
         "    <LibraryPath>$(ProjectDir)..\\vendor\\;$(LibraryPath)</LibraryPath>\r\n"
         "  </PropertyGroup>\r\n"
         "  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|x64'\">\r\n"
         "    <OutDir>$(SolutionDir)bin\\$(Configuration)_$(PlatForm)\\</OutDir>\r\n"
-        "    <IntDir>$(OutDir)tmp\\$(ProjectName)</IntDir>\r\n"
+        "    <IntDir>$(OutDir)tmp\\$(ProjectName)\\</IntDir>\r\n"
         "    <IncludePath>$(ProjectDir)..\\src\\;$(ProjectDir)..\\vendor\\;$(IncludePath)</IncludePath>\r\n"
         "    <LibraryPath>$(ProjectDir)..\\vendor\\;$(LibraryPath)</LibraryPath>\r\n"
         "  </PropertyGroup>\r\n"
         "  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Release|x64'\">\r\n"
         "    <OutDir>$(SolutionDir)bin\\$(Configuration)_$(PlatForm)\\</OutDir>\r\n"
-        "    <IntDir>$(OutDir)tmp\\$(ProjectName)</IntDir>\r\n"
+        "    <IntDir>$(OutDir)tmp\\$(ProjectName)\\</IntDir>\r\n"
         "    <IncludePath>$(ProjectDir)..\\src\\;$(ProjectDir)..\\vendor\\;$(IncludePath)</IncludePath>\r\n"
         "    <LibraryPath>$(ProjectDir)..\\vendor\\;$(LibraryPath)</LibraryPath>\r\n"
         "  </PropertyGroup>\r\n"
@@ -630,12 +630,12 @@ int main()
 {
     ProjectProperty pro;
     pro.m_characterSet = UNICODE_TYPE;
-    pro.m_configurationType = EXE;
-    pro.m_projectName = L"Common";
-    pro.m_slnName = L"SimpleApp";  // 添加到sln或者创建sln，不能为空
-    pro.m_userProps = L"app.props";
+    pro.m_configurationType = LIB;
+    pro.m_projectName = L"test";
+    pro.m_slnName = L"MyLibrary";  // 添加到sln或者创建sln，不能为空
+    // pro.m_userProps = L"app.props";
     pro.m_runtimeLibraryType = STATIC;
-    ProjectMaker maker(pro, L"D:\\workspaces\\C++_workspaces\\SimpleApp\\", true);
+    ProjectMaker maker(pro, L"D:\\workspaces\\C++_workspaces\\MyLibrary1\\", true);
     bool b = maker.MakeProject();
     ::system("pause");
     return 1;
